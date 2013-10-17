@@ -39,5 +39,6 @@ setup(
         ('/etc/ajenti', ['packaging/files/config.json']),
         ('/etc/init.d', ['packaging/files/ajenti']),
         ('/var/lib/ajenti/plugins', ['packaging/files/.placeholder']),
+        ('/var/lib/ajenti/static', ['packaging/files/.placeholder']),
     ],
 )

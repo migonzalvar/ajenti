@@ -9,6 +9,9 @@ from ajenti.api.http import *
 from ajenti.plugins import manager
 
 
+STATIC_FOLDER = '/var/lib/ajenti/static/'
+
+
 @plugin
 class ContentServer (HttpPlugin):
     last_query = 0
@@ -23,13 +26,13 @@ class ContentServer (HttpPlugin):
                     pass
                 ContentCompressor.get().compress()
             self.last_query = time.time()
-        content = ContentCompressor.get().compressed[type]
-        types = {
-            'css': 'text/css',
-            'js': 'application/javascript',
-        }
-        context.add_header('Content-Type', types[type])
-        return context.gzip(content)
+        path = os.path.join(STATIC_FOLDER, 'resources.' + type)
+        if not os.path.exists(path) or ajenti.debug:
+            content = ContentCompressor.get().compressed[type]
+            static = open(path, 'w')
+            static.write(content)
+            static.close()
+        return context.file(path)
 
     @url('/ajenti:static/(?P<plugin>\w+)/(?P<path>.+)')
     def handle_static(self, context, plugin, path):
