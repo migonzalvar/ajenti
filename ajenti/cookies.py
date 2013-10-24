@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__version__ = "1.2.1"
+__version__ = "1.2.1-migonzalvar2"
 import re
 import datetime
 import logging
@@ -353,7 +353,10 @@ def parse_string(data, unquote=default_unquote):
     # which will therefore not normalize as unicode and not compare to
     # the original.
     if isinstance(unquoted, bytes):
-        unquoted = unquoted.decode('utf-8', 'replace')
+        try:
+            unquoted = unquoted.decode('utf-8')
+        except UnicodeDecodeError:
+            unquoted = data.decode('ascii')
     return unquoted
 
 
